@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- 
+  namespace属性:命名空间, 作用就是对sql进行分类管理, sql隔离
+   -->
+<mapper namespace="com.dao.OrderMapper">
+	
+	<resultMap type="order" id="orderMap" autoMapping="true">
+		<!-- 两次查询的结果中都有oid这个重复的字段, 所以必须手动配置映射的规则 -->
+		<result column="oid" property="oid" />
+		<collection property="orderItemList" 
+			column="oid" select="findOrderItemsByOid">
+
+		</collection>
+	</resultMap>
+	
+	<select id="getOrderByOid" parameterType="string" resultMap="orderMap">
+	select * from t_order where oid=#{oid}
+	</select>
+	
+	<select id="findOrderItemsByOid" parameterType="String" resultType="orderitem">
+	select * from t_orderitem where oid=#{oid}
+	</select>
+	
+</mapper>

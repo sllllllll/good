@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- 
+  namespace属性:命名空间, 作用就是对sql进行分类管理, sql隔离
+   -->
+<mapper namespace="com.dao.BookMapper">
+  <!-- sql片段, 可以通过在select标签中用include子标签去引入这个片段 -->
+  <sql id="whereSql">
+	  <where>
+		  	<if test="book.bname != null and book.bname.trim() != ''">
+		  		and bname like #{book.bname}
+		  	</if>
+			  <if test="book.author != null">
+		  		and author like #{book.author}
+		  	</if>
+			  <if test="book.press != null">
+		  		and press like #{book.press}
+		  	</if>
+	  	</where>
+  </sql>
+  <select id="countByParam" parameterType="book" resultType="int">
+	  select count(*) from t_book 
+	  	<include refid="whereSql"></include>
+  </select>
+</mapper>
